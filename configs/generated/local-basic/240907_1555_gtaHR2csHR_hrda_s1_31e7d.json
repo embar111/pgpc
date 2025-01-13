@@ -1,0 +1,7 @@
+{
+    "_base_": "../../hrda/gtaHR2csHR_hrda.py",
+    "name": "240907_1555_gtaHR2csHR_hrda_s1_31e7d",
+    "work_dir": "work_dirs/local-basic/runs/runs",
+    "git_rev": "",
+    "tbname": "runs/runs"
+}

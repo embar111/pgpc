@@ -1,0 +1,101 @@
+{
+    "_base_": [
+        "../../_base_/default_runtime.py",
+        "../../_base_/models/daformer_sepaspp_mitb5.py",
+        "../../_base_/datasets/uda_cityscapesHR_to_darkzurichHR_1024x1024.py",
+        "../../_base_/uda/dacs_a999_fdthings.py",
+        "../../_base_/schedules/adamw.py",
+        "../../_base_/schedules/poly10warm.py"
+    ],
+    "gpu_model": "NVIDIATITANRTX",
+    "n_gpus": 1,
+    "seed": 1,
+    "model": {
+        "pretrained": "pretrained/mit_b5.pth",
+        "backbone": {
+            "type": "mit_b5"
+        },
+        "decode_head": {
+            "single_scale_head": "DAFormerHead",
+            "type": "HRDAHead",
+            "attention_classwise": true,
+            "hr_loss_weight": 0.1
+        },
+        "type": "HRDAEncoderDecoder",
+        "scales": [
+            1,
+            0.5
+        ],
+        "hr_crop_size": [
+            512,
+            512
+        ],
+        "feature_scale": 0.5,
+        "crop_coord_divisible": 8,
+        "hr_slide_inference": true,
+        "test_cfg": {
+            "mode": "slide",
+            "batched_slide": true,
+            "stride": [
+                512,
+                512
+            ],
+            "crop_size": [
+                1024,
+                1024
+            ]
+        }
+    },
+    "data": {
+        "samples_per_gpu": 2,
+        "workers_per_gpu": 1,
+        "train": {
+            "rare_class_sampling": {
+                "min_pixels": 3000,
+                "class_temp": 0.01,
+                "min_crop_ratio": 2.0
+            }
+        }
+    },
+    "optimizer_config": null,
+    "optimizer": {
+        "lr": 6e-05,
+        "paramwise_cfg": {
+            "custom_keys": {
+                "head": {
+                    "lr_mult": 10.0
+                },
+                "pos_block": {
+                    "decay_mult": 0.0
+                },
+                "norm": {
+                    "decay_mult": 0.0
+                }
+            }
+        }
+    },
+    "runner": {
+        "type": "IterBasedRunner",
+        "max_iters": 40000
+    },
+    "checkpoint_config": {
+        "by_epoch": false,
+        "interval": 40000,
+        "max_keep_ckpts": 1
+    },
+    "evaluation": {
+        "interval": 4000,
+        "metric": "mIoU"
+    },
+    "name": "240907_2200_csHR2dzurHR_1024x1024_dacs_a999_fdthings_rcs001-20_hrda1-512-01_daformer_sepaspp_sl_mitb5_poly10warm_s1_6d230",
+    "exp": 49,
+    "name_dataset": "cityscapesHR2darkzurichHR_1024x1024",
+    "name_architecture": "hrda1-512-0.1_daformer_sepaspp_sl_mitb5",
+    "name_encoder": "mitb5",
+    "name_decoder": "hrda1-512-0.1_daformer_sepaspp_sl",
+    "name_uda": "dacs_a999_fdthings_rcs0.01-2.0",
+    "name_opt": "adamw_6e-05_pmTrue_poly10warm_1x2_40k",
+    "tbname": "runs/runs",
+    "work_dir": "work_dirs/runs/runs",
+    "git_rev": ""
+}
